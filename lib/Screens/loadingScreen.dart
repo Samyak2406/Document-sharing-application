@@ -11,12 +11,25 @@ class loadingScreen extends StatefulWidget {
 }
 
 class _loadingScreenState extends State<loadingScreen> {
+
   @override
   void initState() {
     super.initState();
     getPackets();
+    loadRooms();
   }
 
+  void loadRooms()async{
+    myRooms=[];
+    final _store=Firestore.instance;
+    await for(var rooms in _store.collection('abc@gmail.com').snapshots()){//TODO add user email
+      for(var room in rooms.documents){
+        myRooms.add(room.data['name']);
+      }
+      break;
+    }
+  }
+  
   void getPackets()async {
     data=[];
     final _store = Firestore.instance;
@@ -46,7 +59,6 @@ class _loadingScreenState extends State<loadingScreen> {
     }
     Navigator.pushNamedAndRemoveUntil(context, documentScreen.id,(Route<dynamic> route) => false);
   }
-  
 
   @override
   Widget build(BuildContext context) {

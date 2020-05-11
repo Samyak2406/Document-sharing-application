@@ -5,3 +5,7 @@ class myStorage{
   var sender;
   myStorage({this.timeStamp,this.sender});
 }
+
+
+
+List<String> myRooms=[];
