@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'myStorage.dart';
+import 'package:docshelper/Screens/documentScreen.dart';
 
 class documentScreenDrawer extends StatefulWidget {
   @override
@@ -7,6 +9,7 @@ class documentScreenDrawer extends StatefulWidget {
 }
 
 class _documentScreenDrawerState extends State<documentScreenDrawer> {
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -20,15 +23,21 @@ class _documentScreenDrawerState extends State<documentScreenDrawer> {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10),),
-                        color: Colors.blueGrey,
-                      ),
-                      height: 50,
-                      child: Center(
-                        child: Text(
-                          'Room:   ' + myRooms[index],
+                    child: GestureDetector(
+                      onTap: (){
+                        IDoFRoomStorage=myRooms[index];
+                        Navigator.pushNamedAndRemoveUntil(context, documentScreen.id,(Route<dynamic> route) => false);
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10),),
+                          color: Colors.blueGrey,
+                        ),
+                        height: 50,
+                        child: Center(
+                          child: Text(
+                            'Room:   ' + myRooms[index],
+                          ),
                         ),
                       ),
                     ),

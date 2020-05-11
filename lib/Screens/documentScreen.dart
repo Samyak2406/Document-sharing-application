@@ -5,36 +5,26 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
-var IDoFRoom = 'IDoFRoom';
+import '../fetchUpload.dart';
+import '../myStorage.dart';
 
-class documentScreen extends StatelessWidget {
+
+class documentScreen extends StatefulWidget {
+   var IDoFRoom;
   static const id = 'documentScreen';
+  @override
+  _documentScreenState createState() => _documentScreenState();
+}
 
-  String getTimeStamp() {
-    var temp = DateTime.now().millisecondsSinceEpoch.toString();
-    return temp;
+class _documentScreenState extends State<documentScreen> {
+
+  @override
+  void initState() {
+    widget.IDoFRoom=IDoFRoomStorage;
+    super.initState();
+    getPackets(widget.IDoFRoom);
   }
 
-  Future<void> getPdf() async {
-    //Opens the file asking user for permission
-    File file = await FilePicker.getFile(
-      type: FileType.custom,
-      allowedExtensions: ['pdf'], //,'jpg','png'--docs may be in image format
-    );
-    uploadToFirebaseStorage(file);
-  }
-
-  Future<void> uploadToFirebaseStorage(File file) async {
-    FirebaseStorage _storage = FirebaseStorage.instance;
-    String fileName = getTimeStamp();
-    StorageReference _refernce =
-        await _storage.ref().child('$IDoFRoom/' + fileName);
-    StorageUploadTask uploadTask = await _refernce.putFile(file);
-    Firestore _store = Firestore.instance;
-    _store
-        .collection(IDoFRoom)
-        .add({'sender': 'abc@gmail.com', 'timeStamp': fileName});//TODO add custom email
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +38,7 @@ class documentScreen extends StatelessWidget {
         backgroundColor: Colors.indigoAccent,
         child: Icon(Icons.add),
         onPressed: () {
-          getPdf();
+          getPdf(widget.IDoFRoom);
         },
       ),
       body: SafeArea(

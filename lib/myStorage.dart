@@ -9,3 +9,7 @@ class myStorage{
 
 
 List<String> myRooms=[];
+
+
+
+var IDoFRoomStorage;
