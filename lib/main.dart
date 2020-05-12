@@ -3,6 +3,7 @@ import 'package:docshelper/Screens/loadingScreen.dart';
 import 'package:docshelper/Screens/documentScreen.dart';
 import 'package:docshelper/Screens/loginScreen.dart';
 import 'Screens/BlankPage.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {

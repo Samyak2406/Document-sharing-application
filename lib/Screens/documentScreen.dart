@@ -10,7 +10,6 @@ import '../myStorage.dart';
 
 
 class documentScreen extends StatefulWidget {
-   var IDoFRoom;
   static const id = 'documentScreen';
   @override
   _documentScreenState createState() => _documentScreenState();
@@ -20,11 +19,9 @@ class _documentScreenState extends State<documentScreen> {
 
   @override
   void initState() {
-    widget.IDoFRoom=IDoFRoomStorage;
     super.initState();
-    getPackets(widget.IDoFRoom);
-  }
 
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +35,7 @@ class _documentScreenState extends State<documentScreen> {
         backgroundColor: Colors.indigoAccent,
         child: Icon(Icons.add),
         onPressed: () {
-          getPdf(widget.IDoFRoom);
+          getPdf(IDoFRoomStorage);
         },
       ),
       body: SafeArea(
@@ -52,6 +49,28 @@ class _documentScreenState extends State<documentScreen> {
              colors: [Colors.cyan.shade800,Colors.cyan.shade600,Colors.cyan.shade400,Colors.lightGreen.shade300],
              ),
            ),
+          child: ListView.builder(
+            itemCount: data.length,
+            itemBuilder: (context,index){
+              return Column(
+                children: <Widget>[
+                  SizedBox(
+                    height: 30,
+                  ),
+                  GestureDetector(
+                    onTap: () async {
+                      print(index);
+                      await getDownloadurl(IDoFRoomStorage, index);//TODO --
+                    },
+                    child: Text(
+                      data[index].timeStamp.toString(),
+                      style: TextStyle(color: Colors.indigo),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );

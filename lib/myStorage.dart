@@ -13,3 +13,6 @@ List<String> myRooms=[];
 
 
 var IDoFRoomStorage;
+
+
+bool isInitialized=false;

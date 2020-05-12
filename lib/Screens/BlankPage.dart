@@ -11,7 +11,7 @@ class BlankPage extends StatelessWidget {
         backgroundColor: Colors.deepOrange,
       ),
       floatingActionButton: FloatingActionButton(
-        //TODO --
+        //TODO --Create a new Room
         child: Icon(Icons.add),
         backgroundColor: Colors.green.shade700,
       ),
