@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'fetchUpload.dart';
+import 'package:provider/provider.dart';
 import 'myStorage.dart';
 import 'package:docshelper/Screens/documentScreen.dart';
 
@@ -25,7 +26,8 @@ class _documentScreenDrawerState extends State<documentScreenDrawer> {
                     child: GestureDetector(
                       onTap: () async {
                         IDoFRoomStorage=myRooms[index];
-                        await getPackets(IDoFRoomStorage);
+//                        await getPackets(IDoFRoomStorage);
+                        await Provider.of<myStorage>(context,listen: false).getPackets(IDoFRoomStorage);
                         Navigator.pushNamedAndRemoveUntil(context, documentScreen.id,(Route<dynamic> route) => false);
                       },
                       child: Container(
