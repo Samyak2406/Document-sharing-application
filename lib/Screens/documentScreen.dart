@@ -1,12 +1,15 @@
+import 'dart:io';
 import 'package:docshelper/documentScreenDrawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../fetchUpload.dart';
 import '../myStorage.dart';
 
 String text;
+File file;
 
 class documentScreen extends StatefulWidget {
   static const id = 'documentScreen';
@@ -15,14 +18,6 @@ class documentScreen extends StatefulWidget {
 }
 
 class _documentScreenState extends State<documentScreen> {
-  @override
-  void initState() {
-    super.initState();
-    print('init is called');
-    for (var i in data) {
-      print('Hurray---' + i.timeStamp.toString());
-    }
-  }
 
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
@@ -31,8 +26,8 @@ class _documentScreenState extends State<documentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('docs_Helper'),
-        backgroundColor: Colors.indigo,
+        title: FittedBox(child: Text('docs_Helper-$IDoFRoomStorage')),
+        backgroundColor: Colors.indigo.shade400,
       ),
       drawer: documentScreenDrawer(),
       floatingActionButton: FloatingActionButton(
@@ -40,7 +35,9 @@ class _documentScreenState extends State<documentScreen> {
         child: Icon(Icons.add),
         onPressed: () {
           showModalBottomSheet(
-              context: context,isScrollControlled: true, builder: (context) => popUpScreen());
+              context: context,
+              isScrollControlled: true,
+              builder: (context) => popUpScreen());
         },
       ),
       body: SafeArea(
@@ -65,9 +62,9 @@ class _documentScreenState extends State<documentScreen> {
             _refreshController.refreshCompleted();
             await Provider.of<myStorage>(context, listen: false)
                 .getPackets(IDoFRoomStorage);
-            for (var i in data) {
-              print('data is $i');
-            }
+//            for (var i in data) {
+//              print('data is $i');
+//            }
             setState(() {
               data;
             });
@@ -104,7 +101,7 @@ class listview extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 50, right: 10),
                 child: GestureDetector(
                   onTap: () async {
-                    print(index);
+//                    print(index);
                     await getDownloadurl(IDoFRoomStorage, index);
                   },
                   child: Container(
@@ -152,14 +149,18 @@ class popUpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-     decoration: BoxDecoration(
-       gradient: LinearGradient(
-         begin: Alignment.topLeft,
-         end: Alignment.bottomRight,
-           colors: [Colors.blue.shade900,Colors.blue.shade400,Colors.cyan,Colors.cyanAccent,Colors.white],
-       )
-     ),
-
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          Colors.blue.shade900,
+          Colors.blue.shade400,
+          Colors.cyan,
+          Colors.cyanAccent,
+          Colors.white
+        ],
+      )),
       child: Column(
         children: <Widget>[
           Expanded(
@@ -170,10 +171,7 @@ class popUpScreen extends StatelessWidget {
                 child: FittedBox(
                   child: Text(
                     'Upload File',
-                    style: TextStyle(
-                      color: Colors.grey.shade200,
-                      fontSize: 40
-                    ),
+                    style: TextStyle(color: Colors.grey.shade200, fontSize: 40),
                   ),
                 ),
               ),
@@ -190,25 +188,33 @@ class popUpScreen extends StatelessWidget {
                     Expanded(child: Container()),
                     Expanded(
                       flex: 8,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                            colors: [Colors.cyanAccent,Colors.cyan,Colors.blue,Colors.indigo]
-                            ),
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(colors: [
+                            Colors.cyanAccent,
+                            Colors.cyan,
+                            Colors.blue,
+                            Colors.indigo
+                          ]),
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                        ),
+                        child: TextField(
+                          decoration: InputDecoration(
+                            hintText: "File Name",
+                            border:
+                                OutlineInputBorder(borderSide: BorderSide.none),
                           ),
-                          child: TextField(
-                            onChanged: (newValue){
-                              text=newValue;
-                            },
-                            textAlign: TextAlign.center,
-                            autofocus: true,
-                            cursorColor: Colors.white,
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
+                          onChanged: (newValue) {
+                            text = newValue;
+                          },
+                          textAlign: TextAlign.center,
+                          autofocus: true,
+                          cursorColor: Colors.white,
+                          style: TextStyle(
+                            color: Colors.white,
                           ),
                         ),
+                      ),
                     ),
                     Expanded(
                       child: Container(),
@@ -218,30 +224,27 @@ class popUpScreen extends StatelessWidget {
                 Center(
                   child: FittedBox(
                     child: GestureDetector(
-                      onTap: (){
-                        if(text==null){
-                            text='001';}
-                        text=refineName(text);
-                        print(text);
-                        getPdf(IDoFRoomStorage,text);
+                      onTap: () async{
+                        file=null;
+                        try{
+                          file=await getPdf(IDoFRoomStorage);
+                        }catch(e){}
                       },
                       child: FittedBox(
                         child: Container(
                           child: Center(
                             child: Text(
-                              '   Add  File   ',
+                              '   Attach  File   ',
                               style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.indigo.shade900
-                              ),
+                                  fontSize: 20, color: Colors.indigo.shade900),
                             ),
                           ),
-                          height:60,
+                          height: 60,
                           width: 180,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(30)),
                             gradient: LinearGradient(
-                              colors: [Colors.yellow,Colors.green],
+                              colors: [Colors.yellow, Colors.green],
                             ),
                           ),
                         ),
@@ -250,6 +253,50 @@ class popUpScreen extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+          ),
+          Expanded(
+            child: FittedBox(
+              child: Padding(
+                padding: EdgeInsets.all(20.0),
+                child: Container(
+                  child: Center(
+                    child: GestureDetector(
+                      onTap: () async {
+                        text =  refineName(text);
+//                        print("refined is $text");
+                        if(file!=null){
+                          await uploadToFirebaseStorage(file,text);
+                          file=null;
+                          text=null;
+                          Navigator.pop(context);
+                        }
+                        else{
+                          Fluttertoast.showToast(msg: 'Please select a file first');
+                        }
+                      },
+                      child: Container(
+                        child: Center(
+                          child: FittedBox(
+                            child: Text(
+                              'Upload',
+                              style: TextStyle(
+                                color: Colors.deepOrange,
+                              ),
+                            ),
+                          ),
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.lightGreen.shade400,
+                          borderRadius: BorderRadius.all(Radius.circular(30)),
+                        ),
+                        height: 50,
+                        width: 60,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
         ],

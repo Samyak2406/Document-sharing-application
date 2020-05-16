@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'myStorage.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -10,19 +11,23 @@ String getTimeStamp() {
   return temp;
 }
 
-Future<void> getPdf(var IDoFRoom,String FileName) async {
+Future<File> getPdf(var IDoFRoom) async {
   //Opens the file asking user for permission
   try{
     File file = await FilePicker.getFile(
       type: FileType.custom,
       allowedExtensions: ['pdf'], //,'jpg','png'--docs may be in image format
     );
-    uploadToFirebaseStorage(file,IDoFRoom,FileName);
+    return file;
+//    uploadToFirebaseStorage(file,IDoFRoom,FileName);
   }
-  catch(e){}
+  catch(e){
+    return null;
+  }
 }
 
-Future<void> uploadToFirebaseStorage(File file, var IDoFRoom,String FileName) async {
+Future<void> uploadToFirebaseStorage(File file,String FileName) async {
+  String IDoFRoom=IDoFRoomStorage;
   FirebaseStorage _storage = FirebaseStorage.instance;
   String fileName = getTimeStamp();
   StorageReference _reference = await _storage.ref().child('${IDoFRoom}/' + fileName);
@@ -30,7 +35,7 @@ Future<void> uploadToFirebaseStorage(File file, var IDoFRoom,String FileName) as
   Firestore _store = Firestore.instance;
   _store
       .collection(IDoFRoom)
-      .add({'sender': 'abc@gmail.com', 'timeStamp': fileName,'fileName':FileName});//TODO add custom email
+      .add({'sender': UserEmail, 'timeStamp': fileName,'fileName':FileName});//TODO add custom email
 }
 
 Future<void> getDownloadurl(String roomName,int index)async{
@@ -55,6 +60,7 @@ void downloadFile(String url) async {
     response.listen((d) => _downloadData.addAll(d),
         onDone: () {
           fileSave.writeAsBytes(_downloadData);
+          Fluttertoast.showToast(msg: 'File downloaded at $fileSave');
         }
     );
   });
@@ -62,23 +68,24 @@ void downloadFile(String url) async {
 
 Future<String> _findLocalPath() async {
   final directory = await getExternalStorageDirectory();
-  print('zxcvbnm    '+directory.path);
   return directory.path +'/docshelper${getTimeStamp()}.pdf';
 }
 
 
 String refineName(String text){
-  print(text);
-  String refined='File_';
+  if(text==null){
+    return "File_";
+  }
+  String refined='';
   for(int i=0;i<text.length;i++){
     int temp=text.codeUnitAt(i);
-    if(temp<97 && temp>65){
-    }
-    else if(temp<65 || temp>122){
-    }
-    else{
+    String general='AaZz';
+    if((temp>general.codeUnitAt(1) && temp>general.codeUnitAt(3))||(temp>general.codeUnitAt(0) && temp>general.codeUnitAt(2))){
       refined+=text[i];
     }
+  }
+  if(refined.length<3){
+    return 'File_';
   }
   return refined;
 }

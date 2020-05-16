@@ -20,7 +20,7 @@ class _loadingScreenState extends State<loadingScreen> {
   void loadRooms()async{
     myRooms=[];
     final _store=Firestore.instance;
-    await for(var rooms in _store.collection('abc@gmail.com').snapshots()){//TODO add user email
+    await for(var rooms in _store.collection(UserEmail).snapshots()){//TODO add user email
       for(var room in rooms.documents){
         myRooms.add(room.data['name']);
       }

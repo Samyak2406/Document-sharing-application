@@ -10,22 +10,22 @@ class myStorage extends ChangeNotifier{
 
   void getPackets(var IDoFRoom)async {
     data.clear();
-    print('getPackets called');
+//    print('getPackets called');
     final _store = Firestore.instance;
     await for (var packets in _store.collection(IDoFRoom).snapshots()) {
       for(var packetdata in packets.documents){
-        print('${packetdata.data['sender']}');
+//        print('${packetdata.data['sender']}');
         try{
           var timeStamp=int.parse(packetdata.data['timeStamp']);
           var sender=packetdata.data['sender'];
           var Filename=packetdata.data['fileName'];
           myStorage newClass=myStorage(timeStamp: timeStamp,sender: sender,Filename:Filename);
           data.add(newClass);
-        }catch(e){print('exception');}
+        }catch(e){}
       }
       break;
     }
-    print('Length of listData  '+data.length.toString());
+//    print('Length of listData  '+data.length.toString());
     int length=data.length;
     myStorage temp=myStorage();
     //Sort--
@@ -38,9 +38,9 @@ class myStorage extends ChangeNotifier{
         }
       }
     }//data is ready time-wise to be shown...
-    for(int i=0;i<length;i++) {
-      print(data[i].timeStamp);
-    }
+//    for(int i=0;i<length;i++) {
+//      print(data[i].timeStamp);
+//    }
   }
   notifyListeners();
 }
@@ -58,3 +58,6 @@ bool isInitialized=false;//fetchUploadFile
 
 
 bool isSignedIn=false;//loginScreenFile
+
+
+String UserEmail;

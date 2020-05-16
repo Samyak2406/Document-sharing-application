@@ -23,15 +23,20 @@ Future<void> signInWithGoogle() async {
   assert(await user.getIdToken() != null);
 
   final FirebaseUser currentUser = await _auth.currentUser();
-//  String email=currentUser.email;TODO
+  UserEmail=currentUser.email;
   assert(user.uid == currentUser.uid);
-  if(currentUser.email!=null){
+  if(UserEmail!=null){
     isSignedIn=true;
   }
 }
 
 void signOutGoogle() async{
   await googleSignIn.signOut();
-//  print("User Sign Out");
+  UserEmail=null;
+  isSignedIn=false;
+  myRooms=[];
+  data=[];
+  isInitialized=false;
+  IDoFRoomStorage=null;
 }
 //Reference  : https://medium.com/flutter-community/flutter-implementing-google-sign-in-71888bca24ed

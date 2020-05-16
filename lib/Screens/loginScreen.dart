@@ -1,5 +1,6 @@
 import 'package:docshelper/Google_SignIn.dart';
 import 'package:docshelper/Screens/BlankPage.dart';
+import 'package:docshelper/Screens/loadingScreen.dart';
 import 'package:docshelper/myStorage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,11 +23,11 @@ class loginScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               GestureDetector(
-                onTap: (){
+                onTap: ()async{
                   try{
-                    signInWithGoogle();
+                    await signInWithGoogle();
                     if(isSignedIn==true){
-                      Navigator.pushNamedAndRemoveUntil(context, BlankPage.id, (Route<dynamic> route)=>false);
+                      Navigator.pushNamedAndRemoveUntil(context, loadingScreen.id, (Route<dynamic> route)=>false);
                     }
                   }
                   catch(e){}

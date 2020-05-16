@@ -43,7 +43,7 @@ class makeBox extends StatelessWidget {
     return Expanded(
       child: Center(
         child: GestureDetector(
-          onTap: callback, //TODO
+          onTap: callback,
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(20)),

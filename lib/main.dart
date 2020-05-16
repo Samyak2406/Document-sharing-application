@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context)=>myStorage(),
       child: MaterialApp(
-        initialRoute: loadingScreen.id,
+        initialRoute: loginScreen.id,
         routes: (
         {
           BlankPage.id:(context) => BlankPage(),
