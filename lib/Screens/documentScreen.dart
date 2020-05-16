@@ -1,9 +1,12 @@
 import 'package:docshelper/documentScreenDrawer.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../fetchUpload.dart';
 import '../myStorage.dart';
+
+String text;
 
 class documentScreen extends StatefulWidget {
   static const id = 'documentScreen';
@@ -24,7 +27,6 @@ class _documentScreenState extends State<documentScreen> {
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +39,8 @@ class _documentScreenState extends State<documentScreen> {
         backgroundColor: Colors.indigoAccent,
         child: Icon(Icons.add),
         onPressed: () {
-          getPdf(IDoFRoomStorage);
+          showModalBottomSheet(
+              context: context,isScrollControlled: true, builder: (context) => popUpScreen());
         },
       ),
       body: SafeArea(
@@ -60,9 +63,9 @@ class _documentScreenState extends State<documentScreen> {
             //Callback function
             await Future.delayed(Duration(milliseconds: 1000));
             _refreshController.refreshCompleted();
-//            getPackets(IDoFRoomStorage);
-            await Provider.of <myStorage> (context,listen: false).getPackets(IDoFRoomStorage);
-            for(var i in data){
+            await Provider.of<myStorage>(context, listen: false)
+                .getPackets(IDoFRoomStorage);
+            for (var i in data) {
               print('data is $i');
             }
             setState(() {
@@ -76,7 +79,6 @@ class _documentScreenState extends State<documentScreen> {
 }
 
 class listview extends StatelessWidget {
-
   RefreshController _refreshController;
   List<myStorage> data;
   Function callback;
@@ -126,7 +128,7 @@ class listview extends StatelessWidget {
                     child: Center(
                       child: FittedBox(
                         child: Text(
-                          data[index].timeStamp.toString(),
+                          data[index].Filename.toString(),
                           overflow: TextOverflow.fade,
                           style: TextStyle(
                             color: Colors.black87,
@@ -141,6 +143,116 @@ class listview extends StatelessWidget {
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+class popUpScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+     decoration: BoxDecoration(
+       gradient: LinearGradient(
+         begin: Alignment.topLeft,
+         end: Alignment.bottomRight,
+           colors: [Colors.blue.shade900,Colors.blue.shade400,Colors.cyan,Colors.cyanAccent,Colors.white],
+       )
+     ),
+
+      child: Column(
+        children: <Widget>[
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              height: double.infinity,
+              child: Center(
+                child: FittedBox(
+                  child: Text(
+                    'Upload File',
+                    style: TextStyle(
+                      color: Colors.grey.shade200,
+                      fontSize: 40
+                    ),
+                  ),
+                ),
+              ),
+              color: Colors.indigo.shade500,
+            ),
+          ),
+          Expanded(
+            flex: 4,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Expanded(child: Container()),
+                    Expanded(
+                      flex: 8,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                            colors: [Colors.cyanAccent,Colors.cyan,Colors.blue,Colors.indigo]
+                            ),
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                          ),
+                          child: TextField(
+                            onChanged: (newValue){
+                              text=newValue;
+                            },
+                            textAlign: TextAlign.center,
+                            autofocus: true,
+                            cursorColor: Colors.white,
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                    ),
+                    Expanded(
+                      child: Container(),
+                    ),
+                  ],
+                ),
+                Center(
+                  child: FittedBox(
+                    child: GestureDetector(
+                      onTap: (){
+                        if(text==null){
+                            text='001';}
+                        text=refineName(text);
+                        print(text);
+                        getPdf(IDoFRoomStorage,text);
+                      },
+                      child: FittedBox(
+                        child: Container(
+                          child: Center(
+                            child: Text(
+                              '   Add  File   ',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.indigo.shade900
+                              ),
+                            ),
+                          ),
+                          height:60,
+                          width: 180,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(30)),
+                            gradient: LinearGradient(
+                              colors: [Colors.yellow,Colors.green],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

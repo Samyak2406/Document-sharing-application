@@ -1,3 +1,4 @@
+import 'package:docshelper/Screens/BlankPage.dart';
 import 'package:flutter/material.dart';
 import 'fetchUpload.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +29,8 @@ class _documentScreenDrawerState extends State<documentScreenDrawer> {
                         IDoFRoomStorage=myRooms[index];
 //                        await getPackets(IDoFRoomStorage);
                         await Provider.of<myStorage>(context,listen: false).getPackets(IDoFRoomStorage);
-                        Navigator.pushNamedAndRemoveUntil(context, documentScreen.id,(Route<dynamic> route) => false);
+                      Navigator.pushNamedAndRemoveUntil(context, BlankPage.id,(Route<dynamic> route) => false);
+                      Navigator.pushNamed(context, documentScreen.id);
                       },
                       child: Container(
                         decoration: BoxDecoration(

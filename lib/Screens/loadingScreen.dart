@@ -11,7 +11,6 @@ class loadingScreen extends StatefulWidget {
 }
 
 class _loadingScreenState extends State<loadingScreen> {
-
   @override
   void initState() {
     super.initState();

@@ -5,7 +5,9 @@ List<myStorage> data=[];
 class myStorage extends ChangeNotifier{
   var timeStamp;
   var sender;
-  myStorage({this.timeStamp,this.sender});
+  var Filename;
+  myStorage({this.timeStamp,this.sender,@required this.Filename});
+
   void getPackets(var IDoFRoom)async {
     data.clear();
     print('getPackets called');
@@ -16,7 +18,8 @@ class myStorage extends ChangeNotifier{
         try{
           var timeStamp=int.parse(packetdata.data['timeStamp']);
           var sender=packetdata.data['sender'];
-          myStorage newClass=myStorage(timeStamp: timeStamp,sender: sender);
+          var Filename=packetdata.data['fileName'];
+          myStorage newClass=myStorage(timeStamp: timeStamp,sender: sender,Filename:Filename);
           data.add(newClass);
         }catch(e){print('exception');}
       }
@@ -43,12 +46,11 @@ class myStorage extends ChangeNotifier{
 }
 
 
-
 List<String> myRooms=[];
 
 
 
-var IDoFRoomStorage;//TODO--
+var IDoFRoomStorage;
 
 
 bool isInitialized=false;//fetchUploadFile
