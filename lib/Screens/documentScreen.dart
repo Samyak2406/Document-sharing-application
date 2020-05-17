@@ -21,17 +21,22 @@ class _documentScreenState extends State<documentScreen> {
 
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
-
+  @override
+  void initState() {
+    super.initState();
+    text=null;
+    file=null;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: FittedBox(child: Text('docs_Helper-$IDoFRoomStorage')),
-        backgroundColor: Colors.indigo.shade400,
+        backgroundColor: Colors.grey.shade900,
       ),
       drawer: documentScreenDrawer(),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.indigoAccent,
+        backgroundColor: Colors.grey.shade900,
         child: Icon(Icons.add),
         onPressed: () {
           showModalBottomSheet(
@@ -45,16 +50,7 @@ class _documentScreenState extends State<documentScreen> {
           width: double.infinity,
           height: double.infinity,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.cyan.shade800,
-                Colors.cyan.shade600,
-                Colors.cyan.shade400,
-                Colors.lightGreen.shade300
-              ],
-            ),
+          color: Colors.grey.shade300,
           ),
           child: listview(data, () async {
             //Callback function
@@ -62,9 +58,6 @@ class _documentScreenState extends State<documentScreen> {
             _refreshController.refreshCompleted();
             await Provider.of<myStorage>(context, listen: false)
                 .getPackets(IDoFRoomStorage);
-//            for (var i in data) {
-//              print('data is $i');
-//            }
             setState(() {
               data;
             });
@@ -112,15 +105,7 @@ class listview extends StatelessWidget {
                           topLeft: Radius.circular(10),
                           bottomLeft: Radius.circular(20),
                           bottomRight: Radius.circular(30)),
-                      gradient: LinearGradient(
-                          begin: Alignment.bottomRight,
-                          end: Alignment.topLeft,
-                          colors: [
-                            Colors.grey.shade400,
-                            Colors.grey.shade50,
-                            Colors.grey.shade200,
-                            Colors.grey.shade600
-                          ]),
+                          color: Colors.grey.shade800,
                     ),
                     child: Center(
                       child: FittedBox(
@@ -128,7 +113,7 @@ class listview extends StatelessWidget {
                           data[index].Filename.toString(),
                           overflow: TextOverflow.fade,
                           style: TextStyle(
-                            color: Colors.black87,
+                            color: Colors.white,
                             fontSize: 20,
                           ),
                         ),
@@ -144,8 +129,26 @@ class listview extends StatelessWidget {
     );
   }
 }
+final textController=TextEditingController();
+class popUpScreen extends StatefulWidget {
+  @override
+  _popUpScreenState createState() => _popUpScreenState();
+}
 
-class popUpScreen extends StatelessWidget {
+class _popUpScreenState extends State<popUpScreen> {
+  @override
+  void initState() {
+    super.initState();
+    if(text!=null){
+      textController.value=TextEditingValue(text: text);
+    }
+  }
+  void getText(){
+    if(text!=null){
+      print("we are HHHrer--- $text");
+      textController.value=TextEditingValue(text: text);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -199,6 +202,7 @@ class popUpScreen extends StatelessWidget {
                           borderRadius: BorderRadius.all(Radius.circular(20)),
                         ),
                         child: TextField(
+                          controller: textController,
                           decoration: InputDecoration(
                             hintText: "File Name",
                             border:
@@ -229,14 +233,24 @@ class popUpScreen extends StatelessWidget {
                         try{
                           file=await getPdf(IDoFRoomStorage);
                         }catch(e){}
+                        finally{
+                          getText();
+                          setState(() {
+                            file;
+                            text=null;
+                          });
+                        }
                       },
                       child: FittedBox(
                         child: Container(
                           child: Center(
-                            child: Text(
-                              '   Attach  File   ',
-                              style: TextStyle(
-                                  fontSize: 20, color: Colors.indigo.shade900),
+                            child: ListTile(
+                              leading: file==null?Icon(Icons.cancel):Icon(Icons.check),
+                              title: Text(
+                                'Attach  File',
+                                style: TextStyle(
+                                    fontSize: 20, color: Colors.indigo.shade900),
+                              ),
                             ),
                           ),
                           height: 60,
@@ -275,23 +289,26 @@ class popUpScreen extends StatelessWidget {
                           Fluttertoast.showToast(msg: 'Please select a file first');
                         }
                       },
-                      child: Container(
-                        child: Center(
-                          child: FittedBox(
-                            child: Text(
-                              'Upload',
-                              style: TextStyle(
-                                color: Colors.deepOrange,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          child: Center(
+                            child: FittedBox(
+                              child: Text(
+                                'Upload',
+                                style: TextStyle(
+                                  color: Colors.deepOrange,
+                                ),
                               ),
                             ),
                           ),
+                          decoration: BoxDecoration(
+                            color: Colors.lightGreen.shade400,
+                            borderRadius: BorderRadius.all(Radius.circular(30)),
+                          ),
+                          height: 50,
+                          width: 60,
                         ),
-                        decoration: BoxDecoration(
-                          color: Colors.lightGreen.shade400,
-                          borderRadius: BorderRadius.all(Radius.circular(30)),
-                        ),
-                        height: 50,
-                        width: 60,
                       ),
                     ),
                   ),
