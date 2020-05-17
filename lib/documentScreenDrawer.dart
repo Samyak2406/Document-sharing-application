@@ -2,6 +2,7 @@ import 'package:docshelper/Google_SignIn.dart';
 import 'package:docshelper/Screens/BlankPage.dart';
 import 'package:docshelper/Screens/loginScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:provider/provider.dart';
 import 'myStorage.dart';
 import 'package:docshelper/Screens/documentScreen.dart';
@@ -12,104 +13,119 @@ class documentScreenDrawer extends StatefulWidget {
 }
 
 class _documentScreenDrawerState extends State<documentScreenDrawer> {
+  bool showSpinner=false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Drawer(
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              flex: 2,
-              child: Column(
-                children: <Widget>[
-                  Expanded(
-                    child: Container(
-                      color: Colors.blueGrey.shade900,
-                      child: Center(
-                        child: FittedBox(
-                          child: Text(
-                            UserEmail,//TODO--custom email
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 20
+      child: ModalProgressHUD(
+        inAsyncCall: showSpinner,
+        child: Drawer(
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                flex: 2,
+                child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        color: Colors.blueGrey.shade900,
+                        child: Center(
+                          child: FittedBox(
+                            child: Text(
+                              Provider.of<emails>(context,listen: false).UserEmail,//TODO--custom email
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 20
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: (){
-                        signOutGoogle();
-                        Navigator.pushNamedAndRemoveUntil(context, loginScreen.id, (Route<dynamic> route) => false);
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        color: Colors.blueGrey.shade900,
-                         child: Center(
-                           child: Text(
-                             'Sign Out',
-                             style: TextStyle(
-                               fontSize: 20,
-                               color: Colors.grey,
-                             ),
-                           ),
-                         ),
-                      ),
-                    ),
-                  ),
-                ],
+//                    Expanded(
+//                      child: GestureDetector(
+//                        onTap: (){
+//                          setState(() {
+//                            showSpinner=true;
+//                          });
+//                          signOutGoogle(context);
+//                          setState(() {
+//                            showSpinner=false;
+//                          });
+//                          Navigator.pushNamedAndRemoveUntil(context, loginScreen.id, (Route<dynamic> route) => false);
+//                        },
+//                        child: Container(
+//                          width: double.infinity,
+//                          color: Colors.blueGrey.shade900,
+//                           child: Center(
+//                             child: Text(
+//                               'Sign Out',
+//                               style: TextStyle(
+//                                 fontSize: 20,
+//                                 color: Colors.grey,
+//                               ),
+//                             ),
+//                           ),
+//                        ),
+//                      ),
+//                    ),
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              flex: 8,
-              child: Container(
-                color: Colors.blueGrey.shade900,
-                child: ListView.builder(
-                  itemCount: myRooms.length,
-                  itemBuilder: (context, index) {
-                    if (myRooms.length != 0) {
-                      return Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: GestureDetector(
-                              onTap: () async {
-                                IDoFRoomStorage = myRooms[index];
-                                await Provider.of<myStorage>(context, listen: false)
-                                    .getPackets(IDoFRoomStorage);
-                                Navigator.pushNamedAndRemoveUntil(context, BlankPage.id,
-                                    (Route<dynamic> route) => false);
-                                Navigator.pushNamed(context, documentScreen.id);
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
+              Expanded(
+                flex: 10,
+                child: Container(
+                  color: Colors.blueGrey.shade900,
+                  child: ListView.builder(
+                    itemCount: myRooms.length,
+                    itemBuilder: (context, index) {
+                      if (myRooms.length != 0) {
+                        return Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: GestureDetector(
+                                onTap: () async {
+                                  setState(() {
+                                    showSpinner=true;
+                                  });
+                                  IDoFRoomStorage = myRooms[index];
+                                  await Provider.of<myStorage>(context, listen: false)
+                                      .getPackets(IDoFRoomStorage);
+                                  Navigator.popUntil(context, (route)=>route.settings.name==BlankPage.id);
+                                  setState(() {
+                                    showSpinner=false;
+                                  });
+                                  Navigator.pushNamed(context, documentScreen.id);
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                    color: Colors.blueGrey,
                                   ),
-                                  color: Colors.blueGrey,
-                                ),
-                                height: 50,
-                                child: Center(
-                                  child: Text(
-                                    'Room:   ' + myRooms[index],
+                                  height: 50,
+                                  child: Center(
+                                    child: Text(
+                                      'Room:   ' + myRooms[index],
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                          SizedBox(height: 15),
-                        ],
-                      );
-                    } else {
-                      return Container();
-                    }
-                  },
+                            SizedBox(height: 15),
+                          ],
+                        );
+                      } else {
+                        return Container();
+                      }
+                    },
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

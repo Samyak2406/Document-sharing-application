@@ -1,4 +1,6 @@
+import 'package:docshelper/Screens/checkLogInScreen.dart';
 import 'package:docshelper/myStorage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:docshelper/Screens/loadingScreen.dart';
 import 'package:docshelper/Screens/documentScreen.dart';
@@ -13,15 +15,19 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context)=>myStorage(),
-      child: MaterialApp(
-        initialRoute: loginScreen.id,
-        routes: (
-        {
-          BlankPage.id:(context) => BlankPage(),
-          loadingScreen.id:(context)=>loadingScreen(),
-          loginScreen.id:(context)=>loginScreen(),
-          documentScreen.id:(context)=>documentScreen()
-        }
+      child: ChangeNotifierProvider(
+        create: (context)=>emails(),
+        child: MaterialApp(
+          initialRoute: checkLogInScreen.id,
+          routes: (
+          {
+            checkLogInScreen.id:(context)=>checkLogInScreen(),
+            BlankPage.id:(context) => BlankPage(),
+            loadingScreen.id:(context)=>loadingScreen(),
+            loginScreen.id:(context)=>loginScreen(),
+            documentScreen.id:(context)=>documentScreen()
+          }
+          ),
         ),
       ),
     );

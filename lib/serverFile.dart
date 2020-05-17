@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 
 String randomIdGenerator() {
   String s = '';
@@ -25,7 +26,7 @@ void makeServer(BuildContext context) async {
   }
   _store.collection('allRooms').add({'name': serverName});
   _store
-      .collection(UserEmail)
+      .collection(Provider.of<emails>(context,listen: false).UserEmail)
       .add({'name': serverName}); //TODO custom email
   myRooms.add(serverName);
   IDoFRoomStorage = serverName;
@@ -67,7 +68,7 @@ void joinServer(String serverName, BuildContext context) async {
     );
   }
   else {
-    _store.collection(UserEmail).add({'name': serverName});
+    _store.collection(Provider.of<emails>(context,listen: false).UserEmail).add({'name': serverName});
     myRooms.add(serverName);
     IDoFRoomStorage = serverName;
     Navigator.pop(context);

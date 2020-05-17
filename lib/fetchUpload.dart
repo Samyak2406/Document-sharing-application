@@ -2,7 +2,9 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'myStorage.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -26,7 +28,7 @@ Future<File> getPdf(var IDoFRoom) async {
   }
 }
 
-Future<void> uploadToFirebaseStorage(File file,String FileName) async {
+Future<void> uploadToFirebaseStorage(File file,String FileName,BuildContext context) async {
   String IDoFRoom=IDoFRoomStorage;
   FirebaseStorage _storage = FirebaseStorage.instance;
   String fileName = getTimeStamp();
@@ -35,7 +37,7 @@ Future<void> uploadToFirebaseStorage(File file,String FileName) async {
   Firestore _store = Firestore.instance;
   _store
       .collection(IDoFRoom)
-      .add({'sender': UserEmail, 'timeStamp': fileName,'fileName':FileName});//TODO add custom email
+      .add({'sender': Provider.of<emails>(context).UserEmail, 'timeStamp': fileName,'fileName':FileName});//TODO add custom email
 }
 
 Future<void> getDownloadurl(String roomName,int index)async{

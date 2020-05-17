@@ -60,4 +60,18 @@ bool isInitialized=false;//fetchUploadFile
 bool isSignedIn=false;//loginScreenFile
 
 
-String UserEmail;
+
+class emails extends  ChangeNotifier{
+  String UserEmail;
+
+  setemail(String s){
+    this.UserEmail=s;
+    notifyListeners();
+  }
+  removeEmail(){
+    UserEmail='';
+    notifyListeners();
+  }
+
+
+}

@@ -27,6 +27,16 @@ class BlankPage extends StatelessWidget {
             makeBox('Join a server', () {
               joinScreen(context);
             }),
+            Expanded(
+              flex: 2,
+              child: Container(
+                child: Center(
+                  child: FittedBox(
+                    child: Text('Version 0.1'),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -56,7 +66,8 @@ class makeBox extends StatelessWidget {
                 style: TextStyle(
                     color: Colors.red,
                     fontSize: 30,
-                    fontWeight: FontWeight.bold),
+                    fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
@@ -108,8 +119,8 @@ class joinPopUp extends StatelessWidget {
                   ),
                 ),
                 GestureDetector(
-                  onTap: (){
-                    joinServer(serverName,context);
+                  onTap: () {
+                    joinServer(serverName, context);
                   },
                   child: Container(
                     child: Center(child: Text('JOIN')),

@@ -145,7 +145,6 @@ class _popUpScreenState extends State<popUpScreen> {
   }
   void getText(){
     if(text!=null){
-      print("we are HHHrer--- $text");
       textController.value=TextEditingValue(text: text);
     }
   }
@@ -280,7 +279,7 @@ class _popUpScreenState extends State<popUpScreen> {
                         text =  refineName(text);
 //                        print("refined is $text");
                         if(file!=null){
-                          await uploadToFirebaseStorage(file,text);
+                          await uploadToFirebaseStorage(file,text,context);
                           file=null;
                           text=null;
                           Navigator.pop(context);
