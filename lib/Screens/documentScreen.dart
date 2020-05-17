@@ -8,6 +8,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../fetchUpload.dart';
 import '../myStorage.dart';
 
+String backUp;
 String text;
 File file;
 
@@ -18,15 +19,15 @@ class documentScreen extends StatefulWidget {
 }
 
 class _documentScreenState extends State<documentScreen> {
-
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   @override
   void initState() {
     super.initState();
-    text=null;
-    file=null;
+    text = null;
+    file = null;
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,7 +51,7 @@ class _documentScreenState extends State<documentScreen> {
           width: double.infinity,
           height: double.infinity,
           decoration: BoxDecoration(
-          color: Colors.grey.shade300,
+            color: Colors.grey.shade300,
           ),
           child: listview(data, () async {
             //Callback function
@@ -94,7 +95,6 @@ class listview extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 50, right: 10),
                 child: GestureDetector(
                   onTap: () async {
-//                    print(index);
                     await getDownloadurl(IDoFRoomStorage, index);
                   },
                   child: Container(
@@ -105,7 +105,7 @@ class listview extends StatelessWidget {
                           topLeft: Radius.circular(10),
                           bottomLeft: Radius.circular(20),
                           bottomRight: Radius.circular(30)),
-                          color: Colors.grey.shade800,
+                      color: Colors.grey.shade800,
                     ),
                     child: Center(
                       child: FittedBox(
@@ -129,7 +129,9 @@ class listview extends StatelessWidget {
     );
   }
 }
-final textController=TextEditingController();
+
+final textController = TextEditingController();
+
 class popUpScreen extends StatefulWidget {
   @override
   _popUpScreenState createState() => _popUpScreenState();
@@ -139,15 +141,20 @@ class _popUpScreenState extends State<popUpScreen> {
   @override
   void initState() {
     super.initState();
-    if(text!=null){
-      textController.value=TextEditingValue(text: text);
+    if (text != null) {
+      textController.value = TextEditingValue(text: text);
     }
   }
-  void getText(){
-    if(text!=null){
-      textController.value=TextEditingValue(text: text);
+
+  void getText(String s) {
+    if (backUp != null) {
+      setState(() {
+        print("bingo $s");
+        textController.value = TextEditingValue(text: s);
+      });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -208,7 +215,12 @@ class _popUpScreenState extends State<popUpScreen> {
                                 OutlineInputBorder(borderSide: BorderSide.none),
                           ),
                           onChanged: (newValue) {
-                            text = newValue;
+                            if (newValue != null || newValue != '') {
+                              setState(() {
+                                text = newValue;
+                                print(' Dingo{$text}zzz');
+                              });
+                            }
                           },
                           textAlign: TextAlign.center,
                           autofocus: true,
@@ -227,16 +239,15 @@ class _popUpScreenState extends State<popUpScreen> {
                 Center(
                   child: FittedBox(
                     child: GestureDetector(
-                      onTap: () async{
-                        file=null;
-                        try{
-                          file=await getPdf(IDoFRoomStorage);
-                        }catch(e){}
-                        finally{
-                          getText();
+                      onTap: () async {
+                        backUp = text;
+                        file = null;
+                        try {
+                          file = await getPdf(IDoFRoomStorage);
+                        } catch (e) {} finally {
+                          getText(backUp);
                           setState(() {
                             file;
-                            text=null;
                           });
                         }
                       },
@@ -244,11 +255,14 @@ class _popUpScreenState extends State<popUpScreen> {
                         child: Container(
                           child: Center(
                             child: ListTile(
-                              leading: file==null?Icon(Icons.cancel):Icon(Icons.check),
+                              leading: file == null
+                                  ? Icon(Icons.cancel)
+                                  : Icon(Icons.check),
                               title: Text(
                                 'Attach  File',
                                 style: TextStyle(
-                                    fontSize: 20, color: Colors.indigo.shade900),
+                                    fontSize: 20,
+                                    color: Colors.indigo.shade900),
                               ),
                             ),
                           ),
@@ -276,16 +290,16 @@ class _popUpScreenState extends State<popUpScreen> {
                   child: Center(
                     child: GestureDetector(
                       onTap: () async {
-                        text =  refineName(text);
+                        text = refineName(text);
 //                        print("refined is $text");
-                        if(file!=null){
-                          await uploadToFirebaseStorage(file,text,context);
-                          file=null;
-                          text=null;
+                        if (file != null) {
+                          await uploadToFirebaseStorage(file, text, context);
+                          file = null;
+                          text = null;
                           Navigator.pop(context);
-                        }
-                        else{
-                          Fluttertoast.showToast(msg: 'Please select a file first');
+                        } else {
+                          Fluttertoast.showToast(
+                              msg: 'Please select a file first');
                         }
                       },
                       child: Padding(

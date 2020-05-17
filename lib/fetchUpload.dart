@@ -37,7 +37,7 @@ Future<void> uploadToFirebaseStorage(File file,String FileName,BuildContext cont
   Firestore _store = Firestore.instance;
   _store
       .collection(IDoFRoom)
-      .add({'sender': Provider.of<emails>(context).UserEmail, 'timeStamp': fileName,'fileName':FileName});//TODO add custom email
+      .add({'sender': Provider.of<emails>(context,listen: false).UserEmail, 'timeStamp': fileName,'fileName':FileName});
 }
 
 Future<void> getDownloadurl(String roomName,int index)async{
