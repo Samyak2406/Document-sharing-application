@@ -95,7 +95,7 @@ class listview extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 50, right: 10),
                 child: GestureDetector(
                   onTap: () async {
-                    await getDownloadurl(IDoFRoomStorage, index);
+                    await getDownloadurl(IDoFRoomStorage, index,context);
                   },
                   child: Container(
                     height: 70,

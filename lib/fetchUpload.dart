@@ -36,24 +36,24 @@ Future<void> uploadToFirebaseStorage(File file,String FileName,BuildContext cont
   FirebaseStorage _storage = FirebaseStorage.instance;
   String fileName = getTimeStamp();
   StorageReference _reference = await _storage.ref().child('${IDoFRoom}/' + fileName);
-  await _reference.putFile(file);
+  _reference.putFile(file);
   Firestore _store = Firestore.instance;
   _store
       .collection(IDoFRoom)
       .add({'sender': Provider.of<emails>(context,listen: false).UserEmail, 'timeStamp': fileName,'fileName':FileName});
 }
 
-Future<void> getDownloadurl(String roomName,int index)async{
+Future<void> getDownloadurl(String roomName,int index,BuildContext context)async{
   try{
     FirebaseStorage _storage=FirebaseStorage.instance;
     StorageReference reference=await _storage.ref().child(roomName+'/'+data[index].timeStamp.toString());
     String url=await reference.getDownloadURL();
-    downloadFile(url);
+    downloadFile(url,index,context);
   }
   catch(e){}
 }
 
-void downloadFile(String url) async {
+void downloadFile(String url,int index,BuildContext context) async {
   var status = await Permission.storage.status;
   if(status.isUndetermined || status.isDenied){
     Map<Permission, PermissionStatus> statuses = await [
@@ -67,39 +67,21 @@ void downloadFile(String url) async {
 
     if(isInitialized==false){
     await FlutterDownloader.initialize(
-        debug: true // optional: set false to disable printing logs to console
+        debug: true,
     );
     isInitialized=true;
   }
 
     var fileSave =  await _findLocalPath();//+Platform.pathSeparator + 'Download';
-    print("filesave is $fileSave");
     final taskId = await FlutterDownloader.enqueue(
       url: url,
+      fileName: Provider.of<myStorage>(context,listen: false).Filename,
       savedDir: fileSave,
-      showNotification: true, // show download progress in status bar (for Android)
-      openFileFromNotification: true, // click on notification to open downloaded file (for Android)
+      showNotification: true,
+      openFileFromNotification: true,
     );
-    final tasks = await FlutterDownloader.loadTasks();
     await FlutterDownloader.open(taskId: taskId);
     Fluttertoast.showToast(msg: 'File downloaded at $fileSave');
-//    HttpClient client =  HttpClient();
-//    var _downloadData = List<int>();
-//    var fileSave =  File(await _findLocalPath());
-//    print("$fileSave --is path");
-//    client.getUrl(
-//        Uri.parse(url))
-//        .then((HttpClientRequest request) {
-//      return request.close();
-//    }).then((HttpClientResponse response) {
-//      response.listen((d) => _downloadData.addAll(d),
-//          onDone: () {
-//            fileSave.writeAsBytes(_downloadData);
-//            Fluttertoast.showToast(msg: 'File downloaded at $fileSave');
-//            print("'File downloaded at $fileSave'");
-//          }
-//      );
-//    });
   }
 }
 

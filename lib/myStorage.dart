@@ -7,7 +7,6 @@ class myStorage extends ChangeNotifier{
   var sender;
   var Filename;
   myStorage({this.timeStamp,this.sender,@required this.Filename});
-
   void getPackets(var IDoFRoom)async {
     data.clear();
 //    print('getPackets called');
@@ -41,8 +40,8 @@ class myStorage extends ChangeNotifier{
 //    for(int i=0;i<length;i++) {
 //      print(data[i].timeStamp);
 //    }
+    notifyListeners();
   }
-  notifyListeners();
 }
 
 
