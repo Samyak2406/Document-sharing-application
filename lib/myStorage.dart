@@ -2,14 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
-List<myStorage> data=[];
 
 class myStorage extends ChangeNotifier{
+  List<myStorage> data=[];
   var timeStamp;
   var sender;
   var Filename;
   myStorage({this.timeStamp,this.sender,@required this.Filename});
-  void getPackets(var IDoFRoom)async {
+  Future<void> getPackets(var IDoFRoom)async {
     data.clear();
     final _store = Firestore.instance;
     await for (var packets in _store.collection(IDoFRoom).snapshots()) {
@@ -36,8 +36,9 @@ class myStorage extends ChangeNotifier{
         }
       }
     }
-    notifyListeners();
+//    notifyListeners();
   }
+  notifyListeners();
 }
 
 
@@ -99,8 +100,8 @@ String userImage;
 class room extends ChangeNotifier{
   String roomId;
 
-  setRoomId(String s){
-    this.roomId=s;
+  void setRoomId(String s){
+    roomId=s;
     notifyListeners();
   }
 }

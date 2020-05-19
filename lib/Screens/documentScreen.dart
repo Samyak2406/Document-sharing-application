@@ -55,16 +55,15 @@ class _documentScreenState extends State<documentScreen> {
           decoration: BoxDecoration(
             color: Colors.grey.shade300,
           ),
-          child: listview(data, () async {
+          child: listview(Provider.of<myStorage>(context,listen: false).data,
+             () async {
             //Callback function
             await Future.delayed(Duration(milliseconds: 1000));
+            String temp=Provider.of<room>(context, listen: false).roomId;
+            await Provider.of<myStorage>(context, listen: false).getPackets(temp);
             _refreshController.refreshCompleted();
-            Provider.of<myStorage>(context, listen: false)
-                .getPackets(Provider.of<room>(context, listen: false).roomId);
-            setState(() {
-              data;
-            });
-          }, _refreshController),
+             },
+          _refreshController),
         ),
       ),
     );
@@ -294,7 +293,7 @@ class _popUpScreenState extends State<popUpScreen> {
                   child: Center(
                     child: GestureDetector(
                       onTap: () async {
-                        text = refineName(text);
+                        text = refineName(backUp);
                         if (file != null) {
                           await uploadToFirebaseStorage(file, text, context);
                           file = null;

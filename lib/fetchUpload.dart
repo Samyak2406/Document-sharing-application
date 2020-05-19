@@ -46,7 +46,7 @@ Future<void> uploadToFirebaseStorage(File file,String FileName,BuildContext cont
 Future<void> getDownloadurl(String roomName,int index,BuildContext context)async{
   try{
     FirebaseStorage _storage=FirebaseStorage.instance;
-    StorageReference reference=await _storage.ref().child(roomName+'/'+data[index].timeStamp.toString());
+    StorageReference reference=await _storage.ref().child(roomName+'/'+Provider.of<myStorage>(context,listen: false).data[index].timeStamp.toString());
     String url=await reference.getDownloadURL();
     downloadFile(url,index,context);
   }
@@ -92,19 +92,9 @@ Future<String> _findLocalPath() async {
 
 
 String refineName(String text){
+
   if(text==null){
-    return "File_";
+    return "File";
   }
-  String refined='';
-  for(int i=0;i<text.length;i++){
-    int temp=text.codeUnitAt(i);
-    String general='AaZz';
-    if((temp>general.codeUnitAt(1) && temp>general.codeUnitAt(3))||(temp>general.codeUnitAt(0) && temp>general.codeUnitAt(2))){
-      refined+=text[i];
-    }
-  }
-  if(refined.length<3){
-    return 'File_';
-  }
-  return refined;
+  return text;
 }
