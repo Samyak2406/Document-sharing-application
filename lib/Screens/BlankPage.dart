@@ -9,15 +9,11 @@ class BlankPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('docs_Helper'),
-        backgroundColor: Colors.deepOrange,
+        backgroundColor: Colors.black87,
       ),
       drawer: documentScreenDrawer(),
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.yellow, Colors.orangeAccent],
-          ),
-        ),
+        decoration: BoxDecoration(color: Colors.grey.shade300),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
@@ -29,12 +25,15 @@ class BlankPage extends StatelessWidget {
             }),
             Expanded(
               flex: 2,
-              child: Container(
-                child: Center(
-                  child: FittedBox(
-                    child: Text('Version 0.1'),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Container(
+                    child: FittedBox(
+                      child: Text('Version 0.2'),
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
           ],
@@ -64,9 +63,9 @@ class makeBox extends StatelessWidget {
               child: Text(
                 text,
                 style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
@@ -89,7 +88,7 @@ class joinPopUp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.cyanAccent.shade100,
+      color: Colors.cyanAccent.shade100.withOpacity(0.4),
       child: Column(
         children: <Widget>[
           Expanded(
@@ -97,36 +96,47 @@ class joinPopUp extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(20))),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
+                Padding(
+                  padding: const EdgeInsets.all(30.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                        ),
+                        hintText: 'Enter room id:',
+                        hintStyle: TextStyle(
+                          color: Colors.blue.shade700,
+                        ),
                       ),
-                      hintText: 'Enter room id:',
-                      hintStyle: TextStyle(
-                        color: Colors.yellow.shade700,
-                      ),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.indigo.shade700),
+                      onChanged: (newText) {
+                        serverName = newText;
+                      },
                     ),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.indigo.shade700),
-                    onChanged: (newText) {
-                      serverName = newText;
-                    },
                   ),
                 ),
                 GestureDetector(
                   onTap: () {
                     joinServer(serverName, context);
                   },
-                  child: Container(
-                    child: Center(child: Text('JOIN')),
-                    height: 40,
-                    width: 40,
-                    color: Colors.greenAccent,
+                  child: FractionallySizedBox(
+                    widthFactor: 0.5,
+                    child: Container(
+                      child: Center(
+                        child: Text(
+                          'JOIN',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      height: 40,
+                      width: 40,
+                      color: Colors.blue.shade600,
+                    ),
                   ),
                 ),
               ],

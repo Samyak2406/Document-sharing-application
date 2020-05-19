@@ -22,6 +22,7 @@ Future<void> signInWithGoogle(BuildContext context) async {
   assert(await user.getIdToken() != null);
   final FirebaseUser currentUser = await _auth.currentUser();
   Provider.of<emails>(context,listen: false).setemail(currentUser.email);
+  userImage=currentUser.photoUrl;
   assert(user.uid == currentUser.uid);
   if(Provider.of<emails>(context,listen: false).UserEmail!=null){
     isSignedIn=true;

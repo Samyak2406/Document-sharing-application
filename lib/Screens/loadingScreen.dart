@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:docshelper/Screens/BlankPage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,17 +22,20 @@ class _loadingScreenState extends State<loadingScreen> {
   }
 
   void loadRooms()async{
-    myRooms=[];
-    final _store=Firestore.instance;
-    await for(var rooms in _store.collection(Provider.of<emails>(context,listen: false).UserEmail).snapshots()){//TODO add user email
-      for(var room in rooms.documents){
-        myRooms.add(room.data['name']);
-      }
-      if(_store!=null){
-        break;
-      }
-    }
-    Navigator.pushNamedAndRemoveUntil(context, BlankPage.id,(Route<dynamic> route) => false);
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      Provider.of<roomHandle>(context,listen: false).findRooms(context);
+      Navigator.pushNamedAndRemoveUntil(context, BlankPage.id,(Route<dynamic> route) => false);
+
+    });
+//    final _store=Firestore.instance;
+//    await for(var rooms in _store.collection(Provider.of<emails>(context,listen: false).UserEmail).snapshots()){
+//      for(var room in rooms.documents){
+//        myRooms.add(room.data['name']);
+//      }
+//      if(_store!=null){
+//        break;
+//      }
+//    }
   }
   
 

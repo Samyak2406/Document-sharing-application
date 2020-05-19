@@ -57,7 +57,7 @@ class _loginScreenState extends State<loginScreen> {
                 Expanded(
                   child: Container(
                     child: FractionallySizedBox(
-                      heightFactor: 0.6,
+                      heightFactor: 0.3,
                       widthFactor: 0.4,
                       child: GestureDetector(
                         onTap: () async {
@@ -84,13 +84,13 @@ class _loginScreenState extends State<loginScreen> {
                                 'Proceed',
                                 style: TextStyle(
                                   fontSize: 30,
-                                  color: Colors.green.shade900,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.cyanAccent.shade700.withOpacity(0.45),
+                            color: Colors.blue,
                             borderRadius: BorderRadius.all(
                               Radius.circular(60),
                             ),

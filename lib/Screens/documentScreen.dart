@@ -32,7 +32,9 @@ class _documentScreenState extends State<documentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: FittedBox(child: Text('docs_Helper-$IDoFRoomStorage')),
+        title: FittedBox(
+            child: Text(
+                'docs_Helper-${Provider.of<room>(context).roomId}')),
         backgroundColor: Colors.grey.shade900,
       ),
       drawer: documentScreenDrawer(),
@@ -57,8 +59,8 @@ class _documentScreenState extends State<documentScreen> {
             //Callback function
             await Future.delayed(Duration(milliseconds: 1000));
             _refreshController.refreshCompleted();
-            await Provider.of<myStorage>(context, listen: false)
-                .getPackets(IDoFRoomStorage);
+            Provider.of<myStorage>(context, listen: false)
+                .getPackets(Provider.of<room>(context, listen: false).roomId);
             setState(() {
               data;
             });
@@ -95,7 +97,10 @@ class listview extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 50, right: 10),
                 child: GestureDetector(
                   onTap: () async {
-                    await getDownloadurl(IDoFRoomStorage, index,context);
+                    await getDownloadurl(
+                        Provider.of<room>(context, listen: false).roomId,
+                        index,
+                        context);
                   },
                   child: Container(
                     height: 70,
@@ -149,7 +154,6 @@ class _popUpScreenState extends State<popUpScreen> {
   void getText(String s) {
     if (backUp != null) {
       setState(() {
-        print("bingo $s");
         textController.value = TextEditingValue(text: s);
       });
     }
@@ -218,7 +222,6 @@ class _popUpScreenState extends State<popUpScreen> {
                             if (newValue != null || newValue != '') {
                               setState(() {
                                 text = newValue;
-                                print(' Dingo{$text}zzz');
                               });
                             }
                           },
@@ -243,7 +246,8 @@ class _popUpScreenState extends State<popUpScreen> {
                         backUp = text;
                         file = null;
                         try {
-                          file = await getPdf(IDoFRoomStorage);
+                          file = await getPdf(
+                              Provider.of<room>(context, listen: false).roomId);
                         } catch (e) {} finally {
                           getText(backUp);
                           setState(() {
@@ -291,7 +295,6 @@ class _popUpScreenState extends State<popUpScreen> {
                     child: GestureDetector(
                       onTap: () async {
                         text = refineName(text);
-//                        print("refined is $text");
                         if (file != null) {
                           await uploadToFirebaseStorage(file, text, context);
                           file = null;

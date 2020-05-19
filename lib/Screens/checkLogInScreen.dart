@@ -23,8 +23,9 @@ class _checkLogInScreenState extends State<checkLogInScreen> {
     final snapshot=await FirebaseAuth.instance.currentUser();
     if(snapshot!=null){
       String email=snapshot.email;
+       userImage=snapshot.photoUrl;
       Provider.of<emails>(context,listen: false).setemail(email);
-//      print("Snapshot.email is $UserEmail");
+
       Navigator.pushNamedAndRemoveUntil(context, loadingScreen.id,(Route<dynamic> route) => false);
     }
     else{

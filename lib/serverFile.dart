@@ -27,9 +27,11 @@ void makeServer(BuildContext context) async {
   _store.collection('allRooms').add({'name': serverName});
   _store
       .collection(Provider.of<emails>(context,listen: false).UserEmail)
-      .add({'name': serverName}); //TODO custom email
-  myRooms.add(serverName);
-  IDoFRoomStorage = serverName;
+      .add({'name': serverName});
+//  myRooms.add(serverName);
+    Provider.of<roomHandle>(context,listen: false).addRoom(serverName);
+//  IDoFRoomStorage = serverName;
+  Provider.of<room>(context,listen: false).setRoomId(serverName);
   Navigator.pushNamed(context, documentScreen.id);
 }
 
@@ -41,7 +43,8 @@ Future<bool> checkIfPresent(String serverName) async {
         return true;
       }
     }
-    break;
+    if(_store!=null)
+        break;
   }
   return false;
 }
@@ -49,7 +52,7 @@ Future<bool> checkIfPresent(String serverName) async {
 void joinServer(String serverName, BuildContext context) async {
   final _store = Firestore.instance;
   bool isPresent = await checkIfPresent(serverName);
-  if (myRooms.contains(serverName)) {
+  if (Provider.of<roomHandle>(context,listen: false).myRooms.contains(serverName)) {
     Fluttertoast.showToast(
         msg: "You have already joined server $serverName",
       toastLength: Toast.LENGTH_LONG,
@@ -69,8 +72,10 @@ void joinServer(String serverName, BuildContext context) async {
   }
   else {
     _store.collection(Provider.of<emails>(context,listen: false).UserEmail).add({'name': serverName});
-    myRooms.add(serverName);
+//    myRooms.add(serverName);
+    Provider.of<roomHandle>(context,listen: false).addRoom(serverName);
     IDoFRoomStorage = serverName;
+    Provider.of<room>(context,listen: false).setRoomId(serverName);
     Navigator.pop(context);
     Navigator.pushNamed(context, documentScreen.id);
   }

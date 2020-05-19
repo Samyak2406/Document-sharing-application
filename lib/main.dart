@@ -14,19 +14,25 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context)=>myStorage(),
+      create: (context)=>roomHandle(),
       child: ChangeNotifierProvider(
-        create: (context)=>emails(),
-        child: MaterialApp(
-          initialRoute: checkLogInScreen.id,
-          routes: (
-          {
-            checkLogInScreen.id:(context)=>checkLogInScreen(),
-            BlankPage.id:(context) => BlankPage(),
-            loadingScreen.id:(context)=>loadingScreen(),
-            loginScreen.id:(context)=>loginScreen(),
-            documentScreen.id:(context)=>documentScreen()
-          }
+        create: (context)=>myStorage(),
+        child: ChangeNotifierProvider(
+          create: (context)=>emails(),
+          child: ChangeNotifierProvider(
+            create: (context)=>room(),
+            child: MaterialApp(
+              initialRoute: checkLogInScreen.id,
+              routes: (
+              {
+                checkLogInScreen.id:(context)=>checkLogInScreen(),
+                BlankPage.id:(context) => BlankPage(),
+                loadingScreen.id:(context)=>loadingScreen(),
+                loginScreen.id:(context)=>loginScreen(),
+                documentScreen.id:(context)=>documentScreen()
+              }
+              ),
+            ),
           ),
         ),
       ),

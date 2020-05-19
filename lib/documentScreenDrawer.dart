@@ -13,7 +13,7 @@ class documentScreenDrawer extends StatefulWidget {
 }
 
 class _documentScreenDrawerState extends State<documentScreenDrawer> {
-  bool showSpinner=false;
+  bool showSpinner = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -23,104 +23,109 @@ class _documentScreenDrawerState extends State<documentScreenDrawer> {
           child: Column(
             children: <Widget>[
               Expanded(
-                flex: 2,
-                child: Column(
-                  children: <Widget>[
-                    Expanded(
-                      child: Container(
-                        color: Colors.blueGrey.shade900,
-                        child: Center(
-                          child: FittedBox(
-                            child: Text(
-                              Provider.of<emails>(context,listen: false).UserEmail,//TODO--custom email
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 20
+                child: Container(
+                  color: Colors.black87,
+                  child: Center(
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: CircleAvatar(
+                            child: Image.network(userImage),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 7,
+                          child: Center(
+                            child: FittedBox(
+                              child: Text(
+                                " "+ Provider.of<emails>(context, listen: false)
+                                    .UserEmail+" ",
+                                style:
+                                    TextStyle(color: Colors.white, fontSize: 20),
                               ),
                             ),
                           ),
                         ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  color: Colors.blueGrey.shade900,
+                  child: Center(
+                    child: Text(
+                      'My Rooms',
+                      style: TextStyle(
+                        color: Colors.white,
                       ),
                     ),
-//                    Expanded(
-//                      child: GestureDetector(
-//                        onTap: (){
-//                          setState(() {
-//                            showSpinner=true;
-//                          });
-//                          signOutGoogle(context);
-//                          setState(() {
-//                            showSpinner=false;
-//                          });
-//                          Navigator.pushNamedAndRemoveUntil(context, loginScreen.id, (Route<dynamic> route) => false);
-//                        },
-//                        child: Container(
-//                          width: double.infinity,
-//                          color: Colors.blueGrey.shade900,
-//                           child: Center(
-//                             child: Text(
-//                               'Sign Out',
-//                               style: TextStyle(
-//                                 fontSize: 20,
-//                                 color: Colors.grey,
-//                               ),
-//                             ),
-//                           ),
-//                        ),
-//                      ),
-//                    ),
-                  ],
+                  ),
                 ),
               ),
               Expanded(
                 flex: 10,
                 child: Container(
                   color: Colors.blueGrey.shade900,
-                  child: ListView.builder(
-                    itemCount: myRooms.length,
-                    itemBuilder: (context, index) {
-                      if (myRooms.length != 0) {
-                        return Column(
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: GestureDetector(
-                                onTap: () async {
-                                  setState(() {
-                                    showSpinner=true;
-                                  });
-                                  IDoFRoomStorage = myRooms[index];
-                                  await Provider.of<myStorage>(context, listen: false)
-                                      .getPackets(IDoFRoomStorage);
-                                  Navigator.popUntil(context, (route)=>route.settings.name==BlankPage.id);
-                                  setState(() {
-                                    showSpinner=false;
-                                  });
-                                  Navigator.pushNamed(context, documentScreen.id);
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 25),
+                    child: ListView.builder(
+//                      itemCount: myRooms.length,
+                        itemCount: Provider.of<roomHandle>(context,listen: false).myRooms.length,
+                      itemBuilder: (context, index) {
+                        if(Provider.of<roomHandle>(context,listen: false).myRooms.length != 0) {
+                          return Column(
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    setState(() {
+                                      showSpinner = true;
+                                    });
+                                    IDoFRoomStorage = Provider.of<roomHandle>(context,listen: false).myRooms[index];
+                                    Provider.of<myStorage>(context,
+                                            listen: false)
+                                        .getPackets(IDoFRoomStorage);
+                                    Provider.of<room>(context,listen: false).setRoomId(IDoFRoomStorage);
+                                    Navigator.popUntil(
+                                        context,
+                                        (route) =>
+                                            route.settings.name == BlankPage.id);
+                                    setState(() {
+                                      showSpinner = false;
+                                    });
+                                    Navigator.pushNamed(
+                                        context, documentScreen.id);
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10),
+                                      ),
+                                      color: Colors.blueGrey,
                                     ),
-                                    color: Colors.blueGrey,
-                                  ),
-                                  height: 50,
-                                  child: Center(
-                                    child: Text(
-                                      'Room:   ' + myRooms[index],
+                                    height: 50,
+                                    child: Center(
+                                      child: Text(
+                                        'Room:   ' + Provider.of<roomHandle>(context,listen:false).myRooms[index],
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            SizedBox(height: 15),
-                          ],
-                        );
-                      } else {
-                        return Container();
-                      }
-                    },
+                              SizedBox(height: 15),
+                            ],
+                          );
+                        } else {
+                          return Container();
+                        }
+                      },
+                    ),
                   ),
                 ),
               ),
